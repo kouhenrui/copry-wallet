@@ -1,0 +1,8 @@
+controller/：处理请求逻辑（如获取余额、发起转账）
+service/：链服务与 Redis 队列（BTC/ETH/SOL 等）
+middleware/：中间件（鉴权、错误处理）
+model/：MongoDB 数据模型（用户、交易、API Key）
+route/：路由组织
+util/：通用工具函数
+app.ts：核心中间件与路由配置
+server.ts：启动程序
