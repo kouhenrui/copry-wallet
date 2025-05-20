@@ -1,0 +1,58 @@
+# Node modules
+node_modules/
+
+# 编译输出目录
+dist/
+build/
+
+# 日志文件
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# 环境变量文件
+.env
+.env.local
+.env.*.local
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 编辑器和IDE文件
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# TypeScript编译缓存
+*.tsbuildinfo
+
+# Docker相关
+docker-compose.override.yml
+.dockerignore
+
+# TypeORM迁移文件 (源码目录)
+src/migrations/*.ts
+
+# 防止上传本地调试的数据库文件
+*.sqlite
+*.db
+
+# 其他临时文件
+*.log
+*.tmp
+*.temp
+*.swp
+
+# Jest测试缓存
+coverage/
+jest.cache
+
+# Yarn / pnpm / npm lock files忽略（如果你用别的包管理器）
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
