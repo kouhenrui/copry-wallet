@@ -55,6 +55,7 @@ export async function responseFormatter(ctx: Context, next: Next) {
       logData.role = ctx.state.account?.role || "游客登录";
       logData.userId = ctx.state.account?.id || 0;
       logData.resStatus = ctx.status;
+      console.log(logData,'------');
       await LogRepository.create(logData);
     }
   } catch (err: any) {

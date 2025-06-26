@@ -22,7 +22,7 @@ import {
   CreateRoleDto,
   PerfectInfo,
 } from "../dto/auth.dto";
-import { env } from "../util/env";
+import { ServerConfig } from "../util/env";
 import { logger } from "../util/log";
 import { AccountRepository, AccountRepo } from "../orm/repository/user";
 import { RoleRepository } from "../orm/repository/role"; //在使用到该服务时注入
@@ -121,11 +121,17 @@ class AuthService {
         ({ token, exptime } = generateToken(tokenParams));
         const refresh=generateRefreshToken({id:account.id,role:role.name});
         const {refreshToken,refreshExptime}=refresh;
-        await RefreshTokenRepository.create({userId:account.id,token:refreshToken,expiredAt:refreshExptime});
+        let d = {
+          userId: account.id,
+          token: refreshToken,
+          expiredAt: refreshExptime,
+        };
+        logger().info({ event: "refresh token", data: d });
+        await RefreshTokenRepository.create(d);
         await this.redisService.set(
           accessToken,
           JSON.stringify({ token, exptime }),
-          env.jwt.exptime
+          ServerConfig.jwt.exptime
         );
         await this.accountRepo.update(account.id, { accessToken });
       }
@@ -356,7 +362,7 @@ class AuthService {
       await this.redisService.set(
         accessToken,
         JSON.stringify({ token, exptime }),
-        env.jwt.exptime
+        ServerConfig.jwt.exptime
       );
       await this.accountRepo.update(account!.id, { accessToken });
       return { token, exptime };

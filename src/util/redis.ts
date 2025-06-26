@@ -1,17 +1,17 @@
 import Redis from "ioredis";
-import { env } from "./env";
+import { ServerConfig } from "./env";
 import { logger } from "./log";
 export class redisClient {
   private client: Redis;
   constructor() {
     this.client = new Redis({
-      host: env.redis.default.host, //"127.0.0.1",
-      port: env.redis.default.port, //6379,
-      ...(env.redis.default.username
-        ? { username: env.redis.default.username }
+      host: ServerConfig.redis.default.host, //"127.0.0.1",
+      port: ServerConfig.redis.default.port, //6379,
+      ...(ServerConfig.redis.default.username
+        ? { username: ServerConfig.redis.default.username }
         : {}), //三元运算长版写法
-      ...(env.redis.default.password
-        ? { password: env.redis.default.password }
+      ...(ServerConfig.redis.default.password
+        ? { password: ServerConfig.redis.default.password }
         : {}),
       // ...(env.redis.default.username && {
       //   username: env.redis.default.username,
@@ -19,7 +19,7 @@ export class redisClient {
       // ...(env.redis.default.password && {
       //   password: env.redis.default.password,
       // }),
-      db: env.redis.default.db, //0, // 可切换不同 db
+      db: ServerConfig.redis.default.db, //0, // 可切换不同 db
       retryStrategy: (times) => {
         // 连接失败时，重连的时间间隔（ms）
         const delay = Math.min(times * 100, 3000);
@@ -196,13 +196,13 @@ export const getRedisService = () => {
 };
 
 export const rateLimitRedis = new Redis({
-  host: env.redis.default.host, //"127.0.0.1",
-  port: env.redis.default.port, //6379,
-  ...(env.redis.default.username && {
-    username: env.redis.default.username,
+  host: ServerConfig.redis.default.host, //"127.0.0.1",
+  port: ServerConfig.redis.default.port, //6379,
+  ...(ServerConfig.redis.default.username && {
+    username: ServerConfig.redis.default.username,
   }), //三元运算精简版写法
-  ...(env.redis.default.password && {
-    password: env.redis.default.password,
+  ...(ServerConfig.redis.default.password && {
+    password: ServerConfig.redis.default.password,
   }),
   db: 1,
 });

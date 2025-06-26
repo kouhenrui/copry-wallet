@@ -42,7 +42,7 @@ export class LogRepo extends BaseRepo<Log> {
 }
 export class RefreshTokenRepo extends BaseRepo<RefreshToken> {
   constructor() {
-    super(DefaultPGDataSource.name, Log);
+    super(DefaultPGDataSource.name, RefreshToken);
   }
 }
 const ExamRepository = new ExamRepo();

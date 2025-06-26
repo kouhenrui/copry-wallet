@@ -1,7 +1,7 @@
 import CryptoJS from "crypto-js";
 import bcrypt, { compare, genSaltSync, hash } from "bcrypt";
 import jwt, { TokenExpiredError } from "jsonwebtoken";
-import { env } from "./env";
+import { ServerConfig } from "./env";
 import { sensitive } from "./key";
 import * as crypto from "crypto";
 import { v4 as uuidv4 } from "uuid";
@@ -50,8 +50,9 @@ async function comparePasswords(
   return bcrypt.compare(plainPassword, hashedPassword);
 }
 
-const SECRET_KEY = env.jwt.secret; //process.env.JWT_SECRET! || "your_secret_key";
-const REFRESH_SECRET_KEY = env.jwt.refreshSecret||"your_refresh_secret";
+const SECRET_KEY = ServerConfig.jwt.secret; //process.env.JWT_SECRET! || "your_secret_key";
+const REFRESH_SECRET_KEY =
+  ServerConfig.jwt.refreshSecret || "your_refresh_secret";
 /**
  * Encrypts data using AES encryption.
  * @param data - The data to encrypt.
@@ -196,7 +197,7 @@ const replaceSensitiveInfo = (str: string, type: sensitive): string => {
 };
 
 const whiteListRegex = async (path: string): Promise<boolean> => {
-  const regexesWhiteList = env.jwt.whiteList.map((paths) => {
+  const regexesWhiteList = ServerConfig.jwt.whiteList.map((paths) => {
     const escaped = paths.replace(/\//g, "\\/").replace(/\*/g, ".*");
     return new RegExp(`^${escaped}$`);
   });

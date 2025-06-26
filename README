@@ -8,6 +8,6 @@ service/：服务与 Redis 队列
 util/：通用工具函数
 ws/：WebSocket 服务
 app.ts：核心中间件与路由配置
-server.ts：启动程序
+server.ts：启动程序,加载环境变量,挂载websocket
 
 这是一个在线考试系统后端服务

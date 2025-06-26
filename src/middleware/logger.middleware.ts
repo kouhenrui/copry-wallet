@@ -37,7 +37,6 @@ export const ValidationMiddleware = (DtoClass: any) => {
         JSON.stringify(hasError),
         Error(errors.toString())
       );
-      // ctx.throw(400, "参数校验失败", { details: errors });
     }
     await next();
   };

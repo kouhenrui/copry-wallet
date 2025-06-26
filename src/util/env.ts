@@ -1,6 +1,20 @@
 import * as dotenv from "dotenv";
+import { config as loadDotenv } from "dotenv";
+import { logger } from "./log";
+import { resolve } from "path";
+
+// 获取环境变量
+const env = process.env.NODE_ENV || "local";
+
+// 加载对应的 .env 文件
+const envPath = resolve(__dirname, `../../env/.${env}.env`);
+loadDotenv({ path: envPath });
+
+logger().info({
+  event: `环境变量加载成功: ${env}`,
+});
 dotenv.config();
-export const env = {
+export const ServerConfig = {
   // Redis
   redis: {
     default: {

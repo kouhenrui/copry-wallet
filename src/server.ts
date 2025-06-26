@@ -3,13 +3,12 @@ import dotenv from "dotenv";
 import Koa from "koa";
 import http from "http";
 import { initWebSocket } from "./ws";
-import { env } from "./util/env";
+import { ServerConfig } from "./util/env";
 import "reflect-metadata";
 import { initRedis } from "./util/redis";
 import { initLogger, logger } from "./util/log";
 import { initMySQL, initPostgre } from "./util/orm";
-dotenv.config();
-const PORT = env.PORT;
+const PORT = ServerConfig.PORT;
 class StartServer {
   private server: http.Server;
   private app: Koa;
