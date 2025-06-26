@@ -27,7 +27,6 @@ import {
   UpdateQuestionDto,
 } from "../dto/exam";
 import { Exam } from "../orm/entity.ts/exam";
-import { Account } from "../orm/entity.ts/account";
 import { AccountRepo, AccountRepository } from "../orm/repository/user";
 import { ExamQuestion } from "../orm/entity.ts/examQuestion";
 import { ExamAnswer } from "../orm/entity.ts/examAnswer";

@@ -10,6 +10,7 @@
     "strict": true,
     "strictPropertyInitialization": false, // 允许属性不在构造器中初始化（适合 TypeORM）
     "moduleResolution": "node",
+    "types": ["node"],
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,

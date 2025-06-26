@@ -4,7 +4,7 @@ import ExamController from "../controller/exam";
 import ExportController from "../controller/export";
 import { CustomError } from "../util/error";
 import {
-  capychaMiddleware,
+  captchaMiddleware,
   circuitBreakerMiddleware,
   rateLimitMiddleware,
 } from "../middleware/limit.middleware";
@@ -42,7 +42,7 @@ router.post("/auth/login", AuthController.login); //登录
 router.get("/auth/info", AuthController.info); //获取用户信息
 router.post("/auth/refresh", AuthController.refresh); //刷新token
 router.get("/logout", AuthController.logout); //退出登录
-router.get("/captcha", capychaMiddleware, AuthController.captcha); //获取验证码
+router.get("/captcha", captchaMiddleware, AuthController.captcha); //获取验证码
 
 router.get("/cabinet/list", AuthController.cabinetList);
 

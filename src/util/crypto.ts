@@ -1,13 +1,13 @@
 import CryptoJS from "crypto-js";
 import bcrypt, { compare, genSaltSync, hash } from "bcrypt";
-import jwt, { TokenExpiredError } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { ServerConfig } from "./env";
 import { sensitive } from "./key";
 import * as crypto from "crypto";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuid4 } from "uuid";
 import { CaptchaType } from "./key";
 import * as svgCaptcha from "svg-captcha";
-import { CustomError, UnauthorizedError } from "./error";
+import {  UnauthorizedError } from "./error";
 import { scryptSync } from "crypto";
 import { logger } from "./log";
 
@@ -60,11 +60,11 @@ const REFRESH_SECRET_KEY =
  */
 
 function encryptToken(data: Record<string, any>): string {
-  const ciphertext = CryptoJS.AES.encrypt(
+  const ciphered = CryptoJS.AES.encrypt(
     JSON.stringify(data),
     SECRET_KEY
   ).toString();
-  return ciphertext;
+  return ciphered;
 }
 
 /**
@@ -89,12 +89,12 @@ function decryptToken(token: string): any | null {
  * @returns A signed JWT as a string.
  */
 
-function generateToken(payload: any) {
+function generateToken(payload: any):{token:string,etime:number} {
   let exp = new Date();
   exp.setTime(exp.getTime() + 24 * 60 * 60 * 1000);
-  let exptime = exp.getTime();
+  let etime = exp.getTime();
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1d" }); // 可配置过期时间
-  return { token, exptime };
+  return { token, etime };
 }
 
 /**
@@ -117,11 +117,10 @@ function verifyToken(token: string): any | null {
 function generateRefreshToken(payload: { id: number,role:string }) {
   let exp = new Date();
   exp.setTime(exp.getTime() + 24 * 60 * 60 * 1000);
-  let refreshExptime = exp.getTime();
   const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
     expiresIn: "7d",
   }); // 可配置过期时间
-  return { refreshToken, refreshExptime:exp };
+  return { refreshToken, refreshEtime:exp };
 }
 
 /**
@@ -215,7 +214,7 @@ const whiteListRegex = async (path: string): Promise<boolean> => {
  */
 const encryptAES = (text: string, key: string): string => {
   try {
-    if (!text || test.length < 1 || key.length < 32)
+    if (!text || text.length < 1 || key.length < 32)
       throw new Error("字符长度错误");
     // Create a cipher instance with the specified algorithm, key, and initialization vector
     const cipher = crypto.createCipheriv("aes-256-cbc", key, key.slice(0, 16));
@@ -335,7 +334,7 @@ const getCaptcha = (type: CaptchaType, length?: number) => {
     const base64 = `data:image/svg+xml;base64,${Buffer.from(
       captcha.data
     ).toString("base64")}`;
-    const id = uuidv4();
+    const id = uuid4();
     return { base64, text: captcha.text as string, id };
   } catch (error: unknown) {
     console.log(error);

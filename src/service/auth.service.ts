@@ -7,10 +7,8 @@ import {
   generateToken,
   getCaptcha,
   getSelfSalt,
-  hashPassword,
   verifyRefreshToken,
 } from "../util/crypto";
-import { getWebSocketService } from "../ws";
 import { CustomError } from "../util/error";
 import { CaptchaType } from "../util/key";
 import { getRedisService, redisClient } from "../util/redis";
@@ -29,7 +27,7 @@ import { RoleRepository } from "../orm/repository/role"; //在使用到该服务
 import { LogRepo } from "../orm/repository/exam";
 import { Account } from "../orm/entity.ts/account";
 import { RefreshTokenRepository, LogRepository } from "../orm/repository/exam";
-import { PaginationDto, PaginationDts } from "../dto/exam";
+import {  PaginationDts } from "../dto/exam";
 import casbinService from "./casbin.service";
 class AuthService {
   private accountRepo: AccountRepo; //账号表在系统启动时注入了authService中
@@ -103,7 +101,7 @@ class AuthService {
       if (account.password !== encryptPassword(body.password, account.salt))
         throw new CustomError("password error");
       let token: string = "";
-      let exptime: number = 0;
+      let etime: number = 0;
       if (
         account.accessToken &&
         account.accessToken != null &&
@@ -111,31 +109,31 @@ class AuthService {
         (await this.redisService.existCache(account.accessToken))
       ) {
         const jsonRes = await this.redisService.getCache(account.accessToken);
-        ({ token, exptime } = JSON.parse(JSON.stringify(jsonRes)));
+        ({ token, etime } = JSON.parse(JSON.stringify(jsonRes)));
       }
       // 如果没有有效的 token，则重新生成
-      if (!token || token === "" || !exptime || exptime === 0) {
+      if (!token || token === "" || !etime || etime === 0) {
         const accessToken = generateAccessToken();
         const role = await this.findRoleByID(account.role);
         let tokenParams = { id: account.id, role: role.name };
-        ({ token, exptime } = generateToken(tokenParams));
+        ({ token, etime } = generateToken(tokenParams));
         const refresh=generateRefreshToken({id:account.id,role:role.name});
-        const {refreshToken,refreshExptime}=refresh;
+        const { refreshToken, refreshEtime } = refresh;
         let d = {
           userId: account.id,
           token: refreshToken,
-          expiredAt: refreshExptime,
+          expiredAt: refreshEtime,
         };
         logger().info({ event: "refresh token", data: d });
         await RefreshTokenRepository.create(d);
         await this.redisService.set(
           accessToken,
-          JSON.stringify({ token, exptime }),
+          JSON.stringify({ token, etime }),
           ServerConfig.jwt.exptime
         );
         await this.accountRepo.update(account.id, { accessToken });
       }
-      let res: LoginDts = { token, exptime };
+      let res: LoginDts = { token, etime };
       return res;
     } catch (error: any) {
       logger().warn({ event: "auth.service失败", error });
@@ -358,14 +356,14 @@ class AuthService {
       const role = await RoleRepository.findOneBy({ id: account!.role });
       let tokenParams = { id: account!.id, role: role!.name };
       let accessToken = generateAccessToken();
-      const { token, exptime } = generateToken(tokenParams);
+      const { token, etime } = generateToken(tokenParams);
       await this.redisService.set(
         accessToken,
-        JSON.stringify({ token, exptime }),
+        JSON.stringify({ token, etime }),
         ServerConfig.jwt.exptime
       );
       await this.accountRepo.update(account!.id, { accessToken });
-      return { token, exptime };
+      return { token, etime };
     } catch (error: any) {
       logger().warn({ event: "auth refresh service error", error });
       throw error;

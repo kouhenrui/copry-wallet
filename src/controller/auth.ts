@@ -28,8 +28,8 @@ class AuthController {
   async login(ctx: Context) {
     try {
       const body = ctx.request.body as LoginDto;
-      const { token, exptime } = await authService.login(body);
-      ctx.body = { token, exptime };
+      const { token, etime } = await authService.login(body);
+      ctx.body = { token, etime };
     } catch (error: any) {
       logger().warn({ event: "auth login controller error", error });
       throw error;

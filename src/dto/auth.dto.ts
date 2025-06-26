@@ -75,7 +75,7 @@ interface CaptchaDts {
 }
 interface LoginDts {
   token: string;
-  exptime: number;
+  etime: number;
 }
 
 interface CreateRoleDto {

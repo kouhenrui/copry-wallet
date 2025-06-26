@@ -1,18 +1,18 @@
 import Bull, { Job, JobOptions } from "bull";
-import { env } from "./env";
+import { ServerConfig } from "./env";
 class BullQueue {
-  static instance: BullQueue;
+  static instance: BullQueue
   queue: Bull.Queue;
   constructor() {
     this.queue = new Bull("crypto_queue", {
       redis: {
-        host: env.redis.default.host,
-        port: env.redis.default.port,
-        ...(env.redis.default.username && {
-          username: env.redis.default.username,
+        host: ServerConfig.redis.default.host,
+        port: ServerConfig.redis.default.port,
+        ...(ServerConfig.redis.default.username && {
+          username: ServerConfig.redis.default.username,
         }), //三元运算精简版写法
-        ...(env.redis.default.password && {
-          password: env.redis.default.password,
+        ...(ServerConfig.redis.default.password && {
+          password: ServerConfig.redis.default.password,
         }),
       },
     });

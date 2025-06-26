@@ -1,7 +1,7 @@
 import Redis from "ioredis";
 import { getRedisService } from "../util/redis";
 
-import { env } from "../util/env";
+import { ServerConfig } from "../util/env";
 
 export class MessageService {
   private redis: any;
@@ -9,7 +9,7 @@ export class MessageService {
     this.redis = getRedisService();
   }
   async saveMessage(userId: string, message: string) {
-    const key = `${env.MESSAGE_KEY_PREFIX}${userId}`;
+    const key = `${ServerConfig.MESSAGE_KEY_PREFIX}${userId}`;
     const record = JSON.stringify({
       message,
       timestamp: Date.now(),
@@ -18,7 +18,7 @@ export class MessageService {
   }
 
   async getMessages(userId: string) {
-    const key = `${env.MESSAGE_KEY_PREFIX}${userId}`;
+    const key = `${ServerConfig.MESSAGE_KEY_PREFIX}${userId}`;
     const messages = await this.redis.lrange(key, 0, -1);
     return messages.map((msg: any) => JSON.parse(msg));
   }

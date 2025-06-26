@@ -4,7 +4,7 @@ import rateLimit from "koa-ratelimit";
 import { getRedisService, rateLimitRedis } from "../util/redis";
 import CircuitBreaker from "opossum";
 import { logger } from "../util/log";
-import { env } from "../util/env";
+import { ServerConfig } from "../util/env";
 const rateLimitMap = new Map<string, { tokens: number; last: number }>();
 /**
  * Middleware to enforce rate limiting using a token bucket algorithm.
@@ -53,10 +53,10 @@ export function rateLimitMiddleware(options: limitOption) {
 }
 
 //验证码组件限流
-export const capychaMiddleware = async (ctx: Context, next: Next) => {
+export const captchaMiddleware = async (ctx: Context, next: Next) => {
   try {
-    const maxCount = env.captcha.maxCount;
-    const seconds = env.captcha.second;
+    const maxCount = ServerConfig.captcha.maxCount;
+    const seconds = ServerConfig.captcha.second;
     const ip = ctx.ip || ctx.request.ip;
     const key = `limit:ip:${ip}`;
     const redisService = getRedisService();
