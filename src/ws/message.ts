@@ -1,8 +1,5 @@
-import Redis from "ioredis";
 import { getRedisService } from "../util/redis";
-
 import { ServerConfig } from "../util/env";
-
 export class MessageService {
   private redis: any;
   constructor() {

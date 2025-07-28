@@ -24,7 +24,7 @@ class StartServer {
     initLogger({ name: "mainServer", id: "mainID", context: "mainContext" });
     initRedis(); //连接redis
     // initMySQL(); //连接mysql
-    initPostgre(); //连接postgre
+    // initPostgre(); //连接postgre
     this.server.listen(this.port, () => {
       logger().info({
         event: "http server success",

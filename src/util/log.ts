@@ -67,7 +67,7 @@ class Logger {
           "stack" in error
         ) {
           log += `[error]:${JSON.stringify(error.message)}:错误定位点在${
-            JSON.stringify(error.stack).split("at")[1]
+            JSON.stringify(error.stack)//.split("at")[1]
           }`;
         }
         return log;
@@ -80,6 +80,7 @@ class Logger {
         format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
         format.colorize(), // 彩色输出
         format.json(),
+        format.errors({ stack: true }),// 错误堆栈
         logFormat // 自定义格式
       ),
       transports: [new transports.Console()],

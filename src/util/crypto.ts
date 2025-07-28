@@ -369,6 +369,14 @@ export function autoFormatArrayDates(arr: any[]) {
     autoFormatObjectDates(item);
   });
 }
+// 生成版本前缀
+const generateVersionPrefix = () => {
+  return `/api/${ServerConfig.VERSION_PREFIX}`;
+};
+ // 生成请求ID
+  const  getTraceId = (): string => {
+    return `${Date.now()}-${radonString(4)}`;
+  }
 export {
   encryptToken,
   decryptToken,
@@ -389,4 +397,6 @@ export {
   getSaltByBcrypt,
   generateRefreshToken,
   verifyRefreshToken,
+  generateVersionPrefix,
+  getTraceId,
 };

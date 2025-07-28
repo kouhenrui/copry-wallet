@@ -56,6 +56,12 @@ interface logData {
   userId: string;
   resStatus: number;
   error?: string;
+  traceId?: string;
+}
+interface versionPrefix {
+  type: string;
+  prefix?: string;
+  defaultVersion?: string;
 }
 export {
   sensitive,
@@ -65,4 +71,5 @@ export {
   Log,
   logBody,
   logData,
+  versionPrefix,
 };

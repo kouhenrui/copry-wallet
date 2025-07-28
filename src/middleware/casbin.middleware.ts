@@ -5,7 +5,7 @@ import { ForbiddenError } from "../util/error";
 export async function casbinMiddleware(ctx: Context, next: Next) {
   const user = ctx.state.user; // 假设 JWT 中间件已解析用户信息
   if (user) {
-    const subject = user?.role || "anonymous"; // 权限角色
+    const subject = user?.role || "base"; // 权限角色
     const object = ctx.path;
     const action = ctx.method.toLowerCase();
     const pass = await casbinService.enforce(subject, object, action);

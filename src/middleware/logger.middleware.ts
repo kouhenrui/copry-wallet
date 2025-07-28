@@ -3,6 +3,7 @@ import { logger } from "../util/log";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { ValidateParamsError } from "../util/error";
+import { getTraceId } from "../util/crypto";
 export const LoggerMiddleware = async (ctx: Context, next: Next) => {
   const body = ctx.request.body;
   logger().info({
@@ -15,6 +16,7 @@ export const LoggerMiddleware = async (ctx: Context, next: Next) => {
       message: `${JSON.stringify(body)}`,
     });
   }
+  ctx.state.traceId = getTraceId();
 
   await next();
 };

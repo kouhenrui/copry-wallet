@@ -8,6 +8,7 @@ import { LoggerMiddleware } from "./middleware/logger.middleware";
 import authMiddleware from "./middleware/auth.middleware";
 import { rateLimitMiddleware } from "./middleware/limit.middleware";
 import { antiCrawlerMiddleware, apiKeyMiddleware } from "./middleware/anticrawler.middleware";
+import { logger } from "./util/log";
 const app = new Koa();
 
 app.use(cors());//跨域
@@ -20,4 +21,27 @@ app.use(apiKeyMiddleware);//API密钥
 app.use(authMiddleware); //权限中间件
 app.use(antiCrawlerMiddleware);//防爬虫
 app.use(router.routes()).use(router.allowedMethods());
+
+// 全局错误处理（兜底处理）
+app.on('error', (err, ctx) => {
+  logger().error({
+    event: "serverError",
+    message: "未捕获的服务器错误",
+    error: err,
+  });
+  
+  // 如果响应还没有发送，则发送错误响应
+  if (!ctx.res.headersSent) {
+    ctx.status = 500;
+    ctx.body = {
+      success: false,
+      code: 500,
+      error: {
+        code: 'INTERNAL_SERVER_ERROR',
+        message: '服务器内部错误',
+        timestamp: new Date().toISOString()
+      }
+    };
+  }
+});
 export default app;

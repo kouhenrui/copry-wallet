@@ -3,12 +3,10 @@ import {
   IsEnum,
   IsMobilePhone,
   IsNotEmpty,
-  IsPhoneNumber,
   IsString,
   Min,
   ValidateIf,
 } from "class-validator";
-
 export {
   LoginDto,
   LoginMethod,
@@ -18,28 +16,24 @@ export {
   CreateRoleDto,
   PerfectInfo,
 };
+enum LoginMethod {
+  ACCOUNT = "account",
+  PHONE = "phone",
+  EMAIL = "email",
+}
+
 interface Captcha {
   id: string;
   code: string;
 }
-enum LoginMethod {
-  account = "account",
-  phone = "phone",
-  email = "email",
-}
+
 class LoginDto implements Captcha {
-  // @ValidateIf((o) => o.method === "account")
+  @ValidateIf((o) => o.method === LoginMethod.ACCOUNT)
+  @ValidateIf((o) => o.method === LoginMethod.PHONE)
+  @ValidateIf((o) => o.method === LoginMethod.EMAIL)
   @IsNotEmpty({ message: "缺少参数" })
   account: string;
 
-  // @ValidateIf((o) => {return o.method === "phone"})
-  // @IsMobilePhone("zh-CN")
-  // account: string;
-
-  // @ValidateIf((o) => o.method === "email")
-  // @IsEmail()
-  // account: string;
-  
   @IsNotEmpty({ message: "缺少参数" })
   @Min(6, { message: "密码至少6位" })
   password: string;

@@ -19,6 +19,7 @@ export async function responseFormatter(ctx: Context, next: Next) {
     method: ctx.method,
     userId: "",
     resStatus: 0,
+    traceId: "",
   };
   try {
     await next();
@@ -32,6 +33,8 @@ export async function responseFormatter(ctx: Context, next: Next) {
           message: "success",
           data: ctx.body,
           success: true,
+          timestamp: new Date().toLocaleString(),
+          traceId: ctx.state.traceId,
         };
       } else {
         logger().warn({
@@ -44,6 +47,8 @@ export async function responseFormatter(ctx: Context, next: Next) {
           message: "请求异常,请检查后重试",
           data: null,
           success: false,
+          timestamp: new Date().toLocaleString(),
+          traceId: ctx.state.traceId,
         };
       }
       logger().info({
@@ -55,7 +60,7 @@ export async function responseFormatter(ctx: Context, next: Next) {
       logData.role = ctx.state.account?.role || "游客登录";
       logData.userId = ctx.state.account?.id || 0;
       logData.resStatus = ctx.status;
-      console.log(logData,'------');
+      logData.traceId = ctx.state.traceId;
       await LogRepository.create(logData);
     }
   } catch (err: any) {
@@ -68,6 +73,8 @@ export async function responseFormatter(ctx: Context, next: Next) {
         message: `${err.message}` || "Custom error occurred",
         data: null,
         success: false,
+        timestamp: new Date().toLocaleString(),
+        traceId: ctx.state.traceId,
       };
     } else if (
       err instanceof UnauthorizedError ||
@@ -84,6 +91,8 @@ export async function responseFormatter(ctx: Context, next: Next) {
         message: `${err.message}` || "Unauthorized error occurred",
         data: null,
         success: false,
+        timestamp: new Date().toLocaleString(),
+        traceId: ctx.state.traceId,
       };
     } else {
       logger().error({ event: "全局系统错误捕捉日志输出", error: err });
@@ -94,6 +103,8 @@ export async function responseFormatter(ctx: Context, next: Next) {
         message: err.message || "Internal Server Error",
         data: null,
         success: false,
+        timestamp: new Date().toLocaleString(),
+        traceId: ctx.state.traceId,
       };
     }
     logData.level = "error";
@@ -101,6 +112,7 @@ export async function responseFormatter(ctx: Context, next: Next) {
     logData.role = ctx.state.account?.role || "游客登录";
     logData.userId = ctx.state.account?.id || 0;
     logData.resStatus = ctx.status;
+    logData.traceId = ctx.state.traceId;
     await LogRepository.create(logData);
   }
 }

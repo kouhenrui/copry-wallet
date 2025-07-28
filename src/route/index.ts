@@ -15,14 +15,13 @@ import path from "path";
 import fs from "fs";
 import { randomUUID } from "crypto"; // Node 16+
 import { Context } from "koa";
-// import walletRoutes from "./wallet.routes";
-// import transactionRoutes from "./transaction.routes";
-// import authRoutes from "./auth.routes";
+import { logger } from "../util/log";
+import { generateVersionPrefix } from "../util/crypto";
 const uploadDir = path.join(__dirname, "../public");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
-const router = new Router({ prefix: "/api/v1" });
+const router = new Router({ prefix: generateVersionPrefix() });
 // const authRouter = new Router({ prefix: "/auth" });
 // router.use("/wallet", walletRoutes.routes());
 // router.use("/tx", transactionRoutes.routes());
@@ -167,10 +166,19 @@ router.get(
 router.get(
   "/test/rongduan",
   circuitBreakerMiddleware(async (ctx) => {
-    // 模拟错误率
+    try {
+          // 模拟错误率
     let random = Math.random();
     if (random < 0.5) throw new Error("模拟服务错误");
-    return { message: "成功调用服务" };
+    // return { message: "成功调用服务" };
+    const res = await fetch("https://dog.ceo/api/breeds/image/random");
+    const data = await res.json();
+    return data;
+    } catch (error:any) {
+      logger().error({ event: "熔断器error", error:error.message });
+      throw error;
+    }
+
   })
 );
 router.get("/system/error", async (ctx) => {
@@ -185,4 +193,9 @@ router.get("/", async (ctx) => {
     message: "success",
   };
 });
+router.get('/health',async (ctx)=>{
+  ctx.body = {
+    message: "success",
+  };
+})
 export default router;

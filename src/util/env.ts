@@ -127,6 +127,8 @@ export const ServerConfig = {
 
   // PORT
   PORT: process.env.PORT!,
+  // VERSION_PREFIX
+  VERSION_PREFIX: process.env.VERSION_PREFIX! || "v1",
 
   // NODE_ENV
   NODE_ENV: process.env.NODE_ENV || "development",
