@@ -10,7 +10,8 @@ import * as svgCaptcha from "svg-captcha";
 import {  UnauthorizedError } from "./error";
 import { scryptSync } from "crypto";
 import { logger } from "./log";
-
+import os from "os";
+import axios from "axios";
 const SALT_ROUNDS = 10;
 
 /**
@@ -377,6 +378,29 @@ const generateVersionPrefix = () => {
   const  getTraceId = (): string => {
     return `${Date.now()}-${radonString(4)}`;
   }
+  function getLocalIp() {
+    const interfaces = os.networkInterfaces();
+    for (const key in interfaces) {
+      const iface = interfaces[key] as any;
+      for (const alias of iface) {
+        if (alias.family === "IPv4" && !alias.internal) {
+          return alias.address;
+        }
+      }
+    }
+    return "127.0.0.1";
+  }
+
+  async function getPublicIp() {
+    try {
+      const response = await axios.get("https://api.ipify.org?format=json", {
+        timeout: 3000,
+      });
+      return response.data.ip;
+    } catch (error) {
+      return "127.0.0.1";
+    }
+  }
 export {
   encryptToken,
   decryptToken,
@@ -399,4 +423,6 @@ export {
   verifyRefreshToken,
   generateVersionPrefix,
   getTraceId,
+  getLocalIp,
+  getPublicIp,
 };

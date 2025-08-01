@@ -8,6 +8,7 @@ import "reflect-metadata";
 import { initRedis } from "./util/redis";
 import { initLogger, logger } from "./util/log";
 import { initMySQL, initPostgre } from "./util/orm";
+import { getLocalIp, getPublicIp } from "./util/crypto";
 const PORT = ServerConfig.PORT;
 class StartServer {
   private server: http.Server;
@@ -24,11 +25,11 @@ class StartServer {
     initLogger({ name: "mainServer", id: "mainID", context: "mainContext" });
     initRedis(); //连接redis
     // initMySQL(); //连接mysql
-    // initPostgre(); //连接postgre
-    this.server.listen(this.port, () => {
+    initPostgre(); //连接postgre
+    this.server.listen(this.port, async () => {
       logger().info({
         event: "http server success",
-        message: `🚀 http Server running ${this.port}`,
+        message: `server running at - Local: http://localhost:${this.port} 🚀 - LAN: http://${getLocalIp()}:${this.port} 🚀  - Public: http://${await getPublicIp()}:${this.port} 🚀`,
       });
       logger().info({
         event: "websocket server success",
@@ -36,5 +37,6 @@ class StartServer {
       });
     });
   }
+  
 }
 new StartServer(app, PORT!);

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-     "reinstall": "rm -rf node_modules pnpm-lock.yaml && pnpm install",
+    "reinstall": "rm -rf node_modules pnpm-lock.yaml && pnpm install",
     "clean": "rm -rf dist",
     "build": "npm run clean && npx tsc",
     "start": "cross-env NODE_ENV=production node ./dist/server.js",
@@ -35,6 +35,7 @@
     "@types/koa-bodyparser": "^4.3.12",
     "@types/koa-router": "^7.4.8",
     "@types/winston": "^2.4.4",
+    "axios": "^1.11.0",
     "bcrypt": "^5.1.1",
     "bull": "^4.16.5",
     "casbin": "^5.38.0",
