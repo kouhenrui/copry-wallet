@@ -9,6 +9,8 @@ import authMiddleware from "./middleware/auth.middleware";
 import { rateLimitMiddleware } from "./middleware/limit.middleware";
 import { antiCrawlerMiddleware, apiKeyMiddleware } from "./middleware/anticrawler.middleware";
 import { logger } from "./util/log";
+import { koaSwagger } from "koa2-swagger-ui";
+import { swaggerSpec } from "./util/swagger";
 const app = new Koa();
 
 app.use(cors());//跨域
@@ -16,6 +18,17 @@ app.use(bodyParser());//解析post请求
 app.use(LoggerMiddleware); //日志中间件
 app.use(responseFormatter); //全局异常捕捉和格式化返回
 app.use(koaHelmet());//安全中间件 跨站脚本（XSS）、点击劫持、MIME 类型嗅探等
+
+// Swagger UI 配置 - 放在认证中间件之前，避免需要认证才能访问文档
+app.use(
+  koaSwagger({
+    routePrefix: '/swagger', // Swagger UI 访问路径
+    swaggerOptions: {
+      spec: swaggerSpec,
+    },
+  })
+);
+
 app.use(rateLimitMiddleware({ tokensPerInterval: 50, interval: 1000 }));//基于令牌桶的限流
 app.use(apiKeyMiddleware);//API密钥
 app.use(authMiddleware); //权限中间件

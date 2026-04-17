@@ -60,16 +60,16 @@ class Logger {
         if (data) log += `[data]:${JSON.stringify(data)}`;
 
         //使用类型守卫捕捉try catch捕捉的错误类型
-        if (
-          error &&
-          typeof error === "object" &&
-          "message" in error &&
-          "stack" in error
-        ) {
-          log += `[error]:${JSON.stringify(error.message)}:错误定位点在${
-            JSON.stringify(error.stack)//.split("at")[1]
-          }`;
-        }
+        // if (
+        //   error &&
+        //   typeof error === "object" &&
+        //   "message" in error &&
+        //   "stack" in error
+        // ) {
+        //   log += `[error]:${JSON.stringify(error.message)}:错误定位点在${
+        //     JSON.stringify(error.stack)//.split("at")[1]
+        //   }`;
+        // }
         return log;
       }
     );

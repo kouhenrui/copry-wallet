@@ -83,28 +83,28 @@ export const LogPGDataSource = new DataSource({
 });
 
 //配置mysql casbin连接参数
-export const casbinDataSource = new DataSource({
-  type: "mysql",
-  host: ServerConfig.casbin.host, //"localhost",
-  port: Number(ServerConfig.casbin.port), //3306,
-  username: ServerConfig.casbin.username, //"root",
-  password: ServerConfig.casbin.password, //"password",
-  database: ServerConfig.casbin.database, //"crypto_wallet",
-  synchronize: true,
-  entities: [CasbinRule],
-  extra: {
-    connectionLimit: 20,
-  },
-});
+// export const casbinDataSource = new DataSource({
+//   type: "mysql",
+//   host: ServerConfig.casbin.host, //"localhost",
+//   port: Number(ServerConfig.casbin.port), //3306,
+//   username: ServerConfig.casbin.username, //"root",
+//   password: ServerConfig.casbin.password, //"password",
+//   database: ServerConfig.casbin.database, //"crypto_wallet",
+//   synchronize: true,
+//   entities: [CasbinRule],
+//   extra: {
+//     connectionLimit: 20,
+//   },
+// });
 
 //配置Postgres casbin连接参数
 export const casbinDataSourcePostgre = new DataSource({
   type: "postgres",
-  host: ServerConfig.casbin_postgre.host, //"localhost",
-  port: Number(ServerConfig.casbin_postgre.port), //3306,
-  username: ServerConfig.casbin_postgre.username, //"root",
-  password: ServerConfig.casbin_postgre.password, //"password",
-  database: ServerConfig.casbin_postgre.database, //"crypto_wallet",
+  host: ServerConfig.casbin_postgre.host||"127.0.0.1",
+  port: Number(ServerConfig.casbin_postgre.port)||5432,
+  username: ServerConfig.casbin_postgre.username||"postgres",
+  password: ServerConfig.casbin_postgre.password||"123456",
+  database: ServerConfig.casbin_postgre.database||"casbin",
   synchronize: true, //自动迁移实体
   logging: false,
   entities: [CasbinRule], //[User],
@@ -117,20 +117,20 @@ export const casbinDataSourcePostgre = new DataSource({
 
 
 //在mysql自动迁移建表
-export const initMySQL = async () => {
-  try {
-    await DefaultDataSource.initialize();
-    logger().info({ event: "mysql connected", message: "🟢 MySQL connected" });
-  } catch (err: any) {
-    logger().error({ event: "mysql connection error ❌", error: err.message });
-    process.exit(1);
-  }
-};
+// export const initMySQL = async () => {
+//   try {
+//     await DefaultDataSource.initialize();
+//     logger().info({ event: "mysql connected", message: "🟢 MySQL connected" });
+//   } catch (err: any) {
+//     logger().error({ event: "mysql connection error ❌", error: err.message });
+//     process.exit(1);
+//   }
+// };
 
 //在postgres自动迁移建表
 export const initPostgre = async () => {
   try {
-   
+   console.log(DefaultPGDataSource);
     await DefaultPGDataSource.initialize();
     // await LogDataSource.initialize();
     logger().info({

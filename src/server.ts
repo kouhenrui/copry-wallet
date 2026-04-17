@@ -7,7 +7,7 @@ import { ServerConfig } from "./util/env";
 import "reflect-metadata";
 import { initRedis } from "./util/redis";
 import { initLogger, logger } from "./util/log";
-import { initMySQL, initPostgre } from "./util/orm";
+import { initPostgre } from "./util/orm";
 import { getLocalIp, getPublicIp } from "./util/crypto";
 const PORT = ServerConfig.PORT;
 class StartServer {

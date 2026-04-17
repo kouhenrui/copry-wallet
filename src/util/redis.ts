@@ -13,36 +13,21 @@ export class redisClient {
       ...(ServerConfig.redis.default.password
         ? { password: ServerConfig.redis.default.password }
         : {}),
-      // ...(env.redis.default.username && {
-      //   username: env.redis.default.username,
-      // }), //三元运算精简版写法
-      // ...(env.redis.default.password && {
-      //   password: env.redis.default.password,
-      // }),
+
       db: ServerConfig.redis.default.db, //0, // 可切换不同 db
       retryStrategy: (times) => {
         // 连接失败时，重连的时间间隔（ms）
         const delay = Math.min(times * 100, 3000);
         return delay;
       },
-      // reconnectOnError: (err) => {
-      //   const targetError = "READONLY";
-      //   if (err.message.includes(targetError)) {
-      //     // 出现指定错误时才重连
-      //     return true;
-      //   }
-      //   return false;
-      // },
     });
 
     this.client.on("connect", () => {
       logger().info({ event: "redis connected", message: "🌴 redis connected" });
-      // console.log("Redis connected");
-    });
 
+    });
     this.client.on("error", (err) => {
       logger().error({ event: "redis connected error", error: err });
-      // console.error("Redis connected error:", err);
       process.exit(1);
     });
   }

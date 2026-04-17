@@ -18,14 +18,14 @@ export const ServerConfig = {
   // Redis
   redis: {
     default: {
-      host: process.env.REDIS_DEFAULT_HOST || "121.43.161.170",
+      host: process.env.REDIS_DEFAULT_HOST || "127.0.0.1",
       port: parseInt(process.env.REDIS_DEFAULT_PORT || "6379"),
       username: process.env.REDIS_DEFAULT_USERNAME || "",
       password: process.env.REDIS_DEFAULT_PASSWORD || "",
       db: parseInt(process.env.REDIS_DEFAULT_DB || "0"),
     },
     cache: {
-      host: process.env.REDIS_CACHE_HOST || "121.43.161.170",
+      host: process.env.REDIS_CACHE_HOST || "127.0.0.1",
       port: parseInt(process.env.REDIS_CACHE_PORT || "6379"),
       username: process.env.REDIS_CACHE_USERNAME || "",
       password: process.env.REDIS_CACHE_PASSWORD || "",
@@ -37,20 +37,20 @@ export const ServerConfig = {
     second: 60,
   },
 
-  casbin: {
-    type: process.env.CASBIN_TYPE! || "mysql",
-    host: process.env.CASBIN_HOST! || "121.43.161.170",
-    port: process.env.CASBIN_PORT || "3306",
-    username: process.env.CASBIN_USERNAME || "root",
-    password: process.env.CASBIN_PASSWORD || "123456",
-    database: process.env.CASBIN_DATABASE || "test",
-    sync: process.env.CASBIN_SYNC || true,
-  },
+  // casbin: {
+  //   type: process.env.CASBIN_TYPE! || "mysql",
+  //   host: process.env.CASBIN_HOST! || "127.0.0.1",
+  //   port: process.env.CASBIN_PORT || "3306",
+  //   username: process.env.CASBIN_USERNAME || "root",
+  //   password: process.env.CASBIN_PASSWORD || "123456",
+  //   database: process.env.CASBIN_DATABASE || "test",
+  //   sync: process.env.CASBIN_SYNC || true,
+  // },
   casbin_postgre: {
     type: process.env.CASBIN_TYPE || "postgres",
-    host: process.env.CASBIN_POSTGRE_HOST || "121.43.161.170",
+    host: process.env.CASBIN_POSTGRE_HOST || "127.0.0.1",
     port: process.env.CASBIN_POSTGRE_PORT || 5432,
-    username: process.env.CASBIN_POSTGRE_USERNAME || "root",
+    username: process.env.CASBIN_POSTGRE_USERNAME || "postgres",
     password: process.env.CASBIN_POSTGRE_PASSWORD || "123456",
     database: process.env.CASBIN_POSTGRE_DATABASE || "casbin",
     sync: process.env.CASBIN_POSTGRE_SYNC || true,

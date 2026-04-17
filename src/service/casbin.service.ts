@@ -8,7 +8,7 @@ class CasbinService {
   public async init() {
     const adapter = await TypeORMAdapter.newAdapter({
       connection: casbinDataSourcePostgre,
-    });
+    })
     const modelPath = path.resolve(__dirname, "../../model.conf");
     this.enforcer = await newEnforcer(modelPath, adapter);
     await this.enforcer.loadPolicy();
